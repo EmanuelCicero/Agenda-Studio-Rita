@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agende seu horário</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topo">
+        <h2 class="logo">Rô Belo</h2>
+    </header>
+
+    <main>
+        <div class="fundo">
+            <h1 class="titulo">Agende seu horário</h1>
+
+            <div class="caixa">
+
+                <section class="servico">
+                    <div class="faixa">
+                        <span class="nome">Corte</span>
+                        <div class="info">
+                            <p class="valor">1:00H <small>Tempo</small></p>
+                            <p class="valor">R$ 50 <small>Preço</small></p>
+                        </div>
+                    </div>
+
+                    <form class="form">
+                        <input type="hidden" name="servico" value="Corte">
+
+                        <select class="dia" name="dia">
+                            <option>Dia: 21/10/26</option>
+                        </select>
+
+                        <div class="horas">
+                            <input class="radio" type="radio" name="hora" id="c1" value="9:00" required>
+                            <label class="hora" for="c1">9:00h</label>
+                        </div>
+
+                        <div class="campos">
+                            <input class="input" type="text" name="nome" placeholder="Nome:" required>
+                            <input class="input" type="tel" name="telefone" placeholder="Telefone:" required>
+                        </div>
+
+                        <button class="botao" type="submit">Agendar horário</button>
+                    </form>
+                </section>
+
+                <section class="servico">
+                    <div class="faixa">
+                        <span class="nome">Escova</span>
+                        <div class="info">
+                            <p class="valor">30min <small>Tempo</small></p>
+                            <p class="valor">R$ 35 <small>Preço</small></p>
+                        </div>
+                    </div>
+
+                    <form class="form">
+                        <input type="hidden" name="servico" value="Escova">
+
+                        <select class="dia" name="dia">
+                            <option>Dia: 21/10/26</option>
+                        </select>
+
+                        <div class="horas">
+                            <input class="radio" type="radio" name="hora" id="e1" value="9:00" required>
+                            <label class="hora" for="e1">9:00h</label>
+                        </div>
+
+                        <div class="campos">
+                            <input class="input" type="text" name="nome" placeholder="Nome:" required>
+                            <input class="input" type="tel" name="telefone" placeholder="Telefone:" required>
+                        </div>
+
+                        <button class="botao" type="submit">Agendar horário</button>
+                    </form>
+                </section>
+
+                <section class="servico">
+                    <div class="faixa">
+                        <span class="nome">Manicure</span>
+                        <div class="info">
+                            <p class="valor">30min <small>Tempo</small></p>
+                            <p class="valor">R$ 25 <small>Preço</small></p>
+                        </div>
+                    </div>
+
+                    <form class="form">
+                        <input type="hidden" name="servico" value="Manicure">
+
+                        <select class="dia" name="dia">
+                            <option>Dia: 21/10/26</option>
+                        </select>
+
+                        <div class="horas">
+                            <input class="radio" type="radio" name="hora" id="m1" value="9:00" required>
+                            <label class="hora" for="m1">9:00h</label>
+                        </div>
+
+                        <div class="campos">
+                            <input class="input" type="text" name="nome" placeholder="Nome:" required>
+                            <input class="input" type="tel" name="telefone" placeholder="Telefone:" required>
+                        </div>
+
+                        <button class="botao" type="submit">Agendar horário</button>
+                    </form>
+                </section>
+
+                <section class="servico">
+                    <div class="faixa">
+                        <span class="nome">Coloração</span>
+                        <div class="info">
+                            <p class="valor">1:30H <small>Tempo</small></p>
+                            <p class="valor">R$ 120 <small>Preço</small></p>
+                        </div>
+                    </div>
+
+                    <form class="form">
+                        <input type="hidden" name="servico" value="Coloração">
+
+                        <select class="dia" name="dia">
+                            <option>Dia: 21/10/26</option>
+                        </select>
+
+                        <div class="horas">
+                            <input class="radio" type="radio" name="hora" id="co1" value="9:00" required>
+                            <label class="hora" for="co1">9:00h</label>
+                        </div>
+
+                        <div class="campos">
+                            <input class="input" type="text" name="nome" placeholder="Nome:" required>
+                            <input class="input" type="tel" name="telefone" placeholder="Telefone:" required>
+                        </div>
+
+                        <button class="botao" type="submit">Agendar horário</button>
+                    </form>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <h2 class="logo">Rô Belo</h2>
+    </footer>
+
+</body>
+</html>
