@@ -9,19 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
+    
 </head>
 <body>
 
     <header class="topo">
         <h2 class="logo">Rô Belo</h2>
+        <a class="botao-entrar"  href="#painel">Entrar</a>
+        
     </header>
-
+<!--Coloquei id "agendar" para poder ocultar no js-->
     <main>
-        <div class="fundo">
+        <div class="fundo" id="agendar">
             <h1 class="titulo">Agende seu horário</h1>
 
             <div class="caixa">
-
                 <section class="servico">
                     <div class="faixa">
                         <span class="nome">Corte</span>
@@ -144,11 +147,20 @@
 
             </div>
         </div>
+        <!--Adição painel adm-->
+        <section id="painel">
+                <h1>Painel Rita Studio</h1>
+                <label for="dia-sem"> Escolha o dia</label>
+                <input id="dia-sem" type="date">
+                <div id="lista-agendamentos"></div>
+                <button id="botao-voltar" type="button"> Voltar</button>
+        </section>
     </main>
 
     <footer class="rodape">
         <h2 class="logo">Rô Belo</h2>
     </footer>
+
 
 </body>
 </html>
