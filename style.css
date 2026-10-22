@@ -1,0 +1,191 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Instrument Serif", serif;
+    background-color: #F9F7F3;
+    color: #333333;
+}
+
+/* topo e rodapé */
+.topo,
+.rodape {
+    background-color: #FFB396;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* parte do meio */
+main {
+    padding: 30px 40px;
+}
+
+.fundo {
+    background-color: #D9967A;
+    padding: 24px;
+}
+
+.titulo {
+    font-size: 40px;
+    font-weight: 400;
+    margin-bottom: 16px;
+}
+
+.caixa {
+    background-color: #F9F7F3;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* faixa com nome, tempo e preço */
+.faixa {
+    background-color: #FFB396;
+    border-radius: 8px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nome {
+    font-size: 24px;
+}
+
+.info {
+    display: flex;
+    gap: 20px;
+}
+
+.valor {
+    font-size: 20px;
+    text-align: center;
+}
+
+.valor small {
+    display: block;
+    font-size: 9px;
+}
+
+/* formulário */
+.form {
+    background-color: #D9967A;
+    padding: 16px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.dia,
+.input,
+.botao,
+.hora {
+    font: inherit;
+    border: none;
+    border-radius: 8px;
+    background-color: #F9F9FC;
+    padding: 6px 10px;
+}
+
+.horas {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 10px;
+}
+
+.radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hora {
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.radio:checked + .hora {
+    background-color: #5A2E22;
+    color: #fff;
+}
+
+.radio:disabled + .hora {
+    background-color: #FFB396;
+    text-decoration: line-through;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.radio:focus-visible + .hora {
+    outline: 2px solid #000;
+}
+
+.campos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.input {
+    width: 240px;
+}
+
+.botao {
+    cursor: pointer;
+}
+
+/* celular */
+@media (max-width: 700px) {
+    main {
+        padding: 12px;
+    }
+
+    .fundo {
+        padding: 12px;
+    }
+
+    .titulo {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    .caixa {
+        padding: 10px;
+    }
+
+    .info {
+        gap: 12px;
+    }
+
+    .horas {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .campos {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input {
+        width: 100%;
+    }
+}
