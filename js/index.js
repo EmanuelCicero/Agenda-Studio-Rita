@@ -205,7 +205,31 @@ function selecionarHorario(botao) {
     botao.classList.add('checked');
 }
 
+function dataAtualDeAgendamento() {
+    const dataAtual = new Date();
+    const diaSemana = dataAtual.getDay();
+    const segundaFeira = new Date(dataAtual);
+    segundaFeira.setDate(dataAtual.getDate() - (diaSemana === 0 ? 6 : diaSemana - 1));
+
+    document.querySelectorAll('.dia').forEach((elementoData) => {
+        const hoje = new Date(dataAtual);
+        hoje.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < 6; i++) {
+            const data = new Date(segundaFeira);
+            data.setDate(segundaFeira.getDate() + i);
+            if (data < hoje) continue;
+
+            const dataFormatada = data.toLocaleDateString('pt-BR');
+            const option = document.createElement('option');
+            option.value = dataFormatada;
+            option.textContent = dataFormatada;
+            elementoData.appendChild(option);
+        }
+    });
+}
 
 //Chamada de funções
 exibirHorariosDisponiveis();
 validarFormulario();
+dataAtualDeAgendamento();
