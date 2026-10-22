@@ -9,22 +9,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="index.js" defer></script>
-    
 </head>
 <body>
 
     <header class="topo">
         <h2 class="logo">Rô Belo</h2>
         <a class="botao-entrar"  href="#painel">Entrar</a>
-        
     </header>
-<!--Coloquei id "agendar" para poder ocultar no js-->
+
     <main>
+        <!--Coloquei id "agendar" para poder ocultar no js-->
         <div class="fundo" id="agendar">
             <h1 class="titulo">Agende seu horário</h1>
 
             <div class="caixa">
+
                 <section class="servico">
                     <div class="faixa">
                         <span class="nome">Corte</span>
@@ -34,17 +33,12 @@
                         </div>
                     </div>
 
-                    <form class="form">
+                    <form class="form" data-duracao="60">
                         <input type="hidden" name="servico" value="Corte">
 
-                        <select class="dia" name="dia">
-                            <option>Dia: 21/10/26</option>
-                        </select>
+                        <select class="dia" name="dia"></select>
 
-                        <div class="horas">
-                            <input class="radio" type="radio" name="hora" id="c1" value="9:00" required>
-                            <label class="hora" for="c1">9:00h</label>
-                        </div>
+                        <div class="horas"></div>
 
                         <div class="campos">
                             <input class="input" type="text" name="nome" placeholder="Nome:" required>
@@ -64,17 +58,12 @@
                         </div>
                     </div>
 
-                    <form class="form">
+                    <form class="form" data-duracao="30">
                         <input type="hidden" name="servico" value="Escova">
 
-                        <select class="dia" name="dia">
-                            <option>Dia: 21/10/26</option>
-                        </select>
+                        <select class="dia" name="dia"></select>
 
-                        <div class="horas">
-                            <input class="radio" type="radio" name="hora" id="e1" value="9:00" required>
-                            <label class="hora" for="e1">9:00h</label>
-                        </div>
+                        <div class="horas"></div>
 
                         <div class="campos">
                             <input class="input" type="text" name="nome" placeholder="Nome:" required>
@@ -94,17 +83,12 @@
                         </div>
                     </div>
 
-                    <form class="form">
+                    <form class="form" data-duracao="30">
                         <input type="hidden" name="servico" value="Manicure">
 
-                        <select class="dia" name="dia">
-                            <option>Dia: 21/10/26</option>
-                        </select>
+                        <select class="dia" name="dia"></select>
 
-                        <div class="horas">
-                            <input class="radio" type="radio" name="hora" id="m1" value="9:00" required>
-                            <label class="hora" for="m1">9:00h</label>
-                        </div>
+                        <div class="horas"></div>
 
                         <div class="campos">
                             <input class="input" type="text" name="nome" placeholder="Nome:" required>
@@ -124,17 +108,12 @@
                         </div>
                     </div>
 
-                    <form class="form">
+                    <form class="form" data-duracao="90">
                         <input type="hidden" name="servico" value="Coloração">
 
-                        <select class="dia" name="dia">
-                            <option>Dia: 21/10/26</option>
-                        </select>
+                        <select class="dia" name="dia"></select>
 
-                        <div class="horas">
-                            <input class="radio" type="radio" name="hora" id="co1" value="9:00" required>
-                            <label class="hora" for="co1">9:00h</label>
-                        </div>
+                        <div class="horas"></div>
 
                         <div class="campos">
                             <input class="input" type="text" name="nome" placeholder="Nome:" required>
@@ -147,9 +126,10 @@
 
             </div>
         </div>
+        
         <!--Adição painel adm-->
         <section id="painel">
-                <h1>Painel Rita Studio</h1>
+                <h1>Painel da Rita</h1>
                 <label for="dia-sem"> Escolha o dia</label>
                 <input id="dia-sem" type="date">
                 <div id="lista-agendamentos"></div>
@@ -161,6 +141,6 @@
         <h2 class="logo">Rô Belo</h2>
     </footer>
 
-
+    <script src="js/index.js"></script>
 </body>
 </html>

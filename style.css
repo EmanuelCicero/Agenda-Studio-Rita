@@ -9,7 +9,7 @@
 body {
     font-family: "Instrument Serif", serif;
     background-color: #F9F7F3;
-    color: #1e1e1e;
+    color: #333333;
 }
 
 /* topo e rodapé */
@@ -29,6 +29,12 @@ body {
 .Entrar {
     padding: 10px 16px;
     cursor: pointer;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 400;
+    font-style: italic;
 }
 
 /* parte do meio */
@@ -66,7 +72,7 @@ main {
 }
 
 .nome {
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .info {
@@ -125,21 +131,18 @@ main {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 
-.radio:checked + .hora {
+.hora.checked {
     background-color: #5A2E22;
     color: #fff;
 }
 
-.radio:disabled + .hora {
-    background-color: #FFB396;
-    text-decoration: line-through;
-    cursor: not-allowed;
-    box-shadow: none;
+.mensagem-sem-horarios {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
 }
 
-.radio:focus-visible + .hora {
-    outline: 2px solid #000;
-}
+
 
 .campos {
     display: flex;
@@ -155,7 +158,7 @@ main {
     cursor: pointer;
 }
 
-/* Estilização do botao do "entrar" do painel adm*/
+/* Estilização painel adm*/
 .botao-entrar {
     background-color: #f1ece9;
     color: #573934;
@@ -169,8 +172,68 @@ main {
     background-color: #f1ece9;
 }
 
-/*Painel em si */
+#painel {
+    max-width: 850px;
+    min-height: 300px;
+    margin: 40px auto;
+    padding: 32px;
+    background-color: #fffaf7;
+    color: #382f2b;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px #382f2b20;
+}
 
+#painel h1 {
+    margin-top: 0;
+    font-size: 36px;
+}
+
+#painel input[type="date"] {
+    padding: 10px;
+    border: 1px solid #c9aaa0;
+    border-radius: 8px;
+    font: inherit;
+}
+
+#lista-agendamentos .agendamento p {
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+
+.agendamento {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 16px 24px;
+    background-color: #fff1eb;
+    border-radius: 16px;
+}
+
+.agendamento p {
+    margin: 0;
+}
+
+.agendamento button {
+    flex-shrink: 0;
+}
+
+
+#painel button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    background-color: #754b3d;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+}
+
+#lista-agendamentos button {
+    background-color: #a84f45;
+}
 
 /* celular */
 @media (max-width: 700px) {
@@ -209,4 +272,12 @@ main {
         width: 100%;
     }
 
+    #painel {
+        margin: 20px 12px;
+        padding: 22px;
+    }
+
+    #painel h1 {
+        font-size: 28px;
+    }
 }
