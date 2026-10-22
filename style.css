@@ -122,21 +122,18 @@ main {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 
-.radio:checked + .hora {
+.hora.checked {
     background-color: #5A2E22;
     color: #fff;
 }
 
-.radio:disabled + .hora {
-    background-color: #FFB396;
-    text-decoration: line-through;
-    cursor: not-allowed;
-    box-shadow: none;
+.mensagem-sem-horarios {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
 }
 
-.radio:focus-visible + .hora {
-    outline: 2px solid #000;
-}
+
 
 .campos {
     display: flex;
