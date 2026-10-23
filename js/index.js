@@ -41,14 +41,24 @@ function mostrarAgendamentos() {
 
         const cartao = document.createElement("div");
         cartao.className = "agendamento";
+        if(reserva.concluida) {
+            linha.classList.add("concluido");
+            cartao.append(linha);
+        } else {
 
-        const botaoCancelar = document.createElement("button");
-        botaoCancelar.type = "button";
-        botaoCancelar.textContent = "Cancelar";
-        botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
+            const botaoCancelar = document.createElement("button");
+            botaoCancelar.type = "button";
+            botaoCancelar.textContent = "Cancelar";
+            botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
 
-        cartao.append(linha, botaoCancelar);
-        listaAgendamentos.append(cartao);
+            const botaoConcluir = document.createElement("button");
+            botaoConcluir.type = "button";
+            botaoConcluir.textContent = ("Concluir");
+            botaoConcluir.addEventListener("click", () => concluirReserva(reserva));
+
+            cartao.append(linha, botaoCancelar, botaoConcluir);
+        }
+            listaAgendamentos.append(cartao);
     });
 }
 
@@ -66,6 +76,21 @@ async function cancelarReserva(reserva) {
         reservas.splice(posicao, 1);
         salvarReservas();
     });
+}
+
+async function concluirReserva(reserva) {
+    await alterarReservas(() => {
+        const posicao = reservas.findIndex(atual => atual.id === reserva.id);
+        
+        if(posicao === -1) {
+            alert('Agendamento já concluido.')
+            return;
+        }
+
+        reservas[posicao].concluida = true;
+        salvarReservas();
+    });
+
 }
 
 function OcultarTelaPrincipal() {
@@ -98,7 +123,8 @@ function carregarReservas(interromperEmErro = false) {
                 horario,
                 duracao,
                 nome: reserva.nome || '',
-                telefone: reserva.telefone || ''
+                telefone: reserva.telefone || '',
+                concluida: reserva.concluida === true
             };
         });
 
