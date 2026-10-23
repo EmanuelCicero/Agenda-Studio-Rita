@@ -38,12 +38,29 @@ function mostrarAgendamentos() {
         const cartao = document.createElement("div");
         cartao.className = "agendamento";
 
+        if(reserva.concluida) {
+            linha.classList.add("concluido");
+            cartao.append(linha);
+        }
+        else {
+        
         const botaoCancelar = document.createElement("button");
         botaoCancelar.type = "button";
         botaoCancelar.textContent = "Cancelar";
         botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
+        
+        const botaoConcluir = document.createElement("button");
+        botaoConcluir.type = "button";
+        botaoConcluir.textContent = reserva.concluida ? "concluido" : "concluir";
+        botaoConcluir.disabled = reserva.concluida;
+        botaoConcluir.addEventListener("click", () => {
+            reserva.concluida = true;
+            salvarReservas();
+            mostrarAgendamentos();
+        });
 
-        cartao.append(linha, botaoCancelar);
+        cartao.append(linha, botaoCancelar, botaoConcluir);
+        }
         listaAgendamentos.append(cartao);
     });
 }
@@ -58,6 +75,18 @@ function cancelarReserva(reserva) {
     reservas.splice(posicao, 1);
     salvarReservas();
     atualizarHorariosIndisponiveis();
+    mostrarAgendamentos();
+}
+
+function concluirReserva(reserva) {
+    const posicao = reservas.indexof(reserva);
+
+    if(posicao === -1) {
+        return;
+    }
+
+    reserva[posicao].concluida = true;
+    salvarReservas();
     mostrarAgendamentos();
 }
 
@@ -86,11 +115,10 @@ function carregarReservas() {
 
             return {
                 servico: reserva.servico || 'Reserva anterior',
-                dia: reserva.dia,
-                horario,
-                duracao,
+                dia: reserva.dia,horario,duracao,
                 nome: reserva.nome || '',
-                telefone: reserva.telefone || ''
+                telefone: reserva.telefone || '',
+                concluida: reserva.concluida === true
             };
         });
 
@@ -172,7 +200,8 @@ function validarFormulario() {
                 horario: horarioSelecionado.innerText,
                 duracao,
                 nome,
-                telefone
+                telefone,
+                concluida: false
             };
 
             reservas.push(agendamento);

@@ -235,6 +235,11 @@ main {
     background-color: #a84f45;
 }
 
+.concluido {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
 /* celular */
 @media (max-width: 700px) {
     main {
