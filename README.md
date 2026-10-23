@@ -32,14 +32,28 @@ Eliminar a necessidade de agendamentos manuais por mensagem, otimizando o tempo 
 
 ## 🚀 Como executar o projeto localmente
 
-Como o projeto é construído em JavaScript padrão (Vanilla) e não necessita de banco de dados externo ou servidor Node.js, rodá-lo é muito simples:
+O projeto usa módulos JavaScript e precisa ser servido por HTTP. Para desenvolvimento, use o Live Server do VS Code ou um servidor estático:
 
 1. Clone este repositório em sua máquina:
    ```bash
    git clone https://github.com/EmanuelCicero/Agenda-Studio-Rita.git
+   cd Agenda-Studio-Rita
+   ```
+
+2. Inicie o Live Server ou, se tiver Python instalado, execute:
+   ```bash
+   python3 -m http.server 8000
+   ```
+
+3. Acesse `http://localhost:8000` em um navegador atualizado.
+
+Agendamentos e cancelamentos usam Web Locks para coordenar gravações entre abas da mesma origem. Esse recurso exige HTTPS ou localhost. Se estiver indisponível, o sistema informa o motivo e impede a alteração da agenda.
+
+Os dados ficam no `localStorage` do navegador. A coordenação entre abas não compartilha a agenda entre dispositivos ou navegadores diferentes.
 
 ## 🧪 Como rodar os testes
 
 1. Para executar os testes, abra o terminal na raiz do projeto e rode o comando:
    ```bash
-   node ./src/regras/agenda.test.js
+   npm test
+   ```
