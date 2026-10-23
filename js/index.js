@@ -41,31 +41,24 @@ function mostrarAgendamentos() {
 
         const cartao = document.createElement("div");
         cartao.className = "agendamento";
-
         if(reserva.concluida) {
             linha.classList.add("concluido");
             cartao.append(linha);
-        }
-        else {
-        
-        const botaoCancelar = document.createElement("button");
-        botaoCancelar.type = "button";
-        botaoCancelar.textContent = "Cancelar";
-        botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
-        
-        const botaoConcluir = document.createElement("button");
-        botaoConcluir.type = "button";
-        botaoConcluir.textContent = reserva.concluida ? "concluido" : "concluir";
-        botaoConcluir.disabled = reserva.concluida;
-        botaoConcluir.addEventListener("click", () => {
-            reserva.concluida = true;
-            salvarReservas();
-            mostrarAgendamentos();
-        });
+        } else {
 
-        cartao.append(linha, botaoCancelar, botaoConcluir);
+            const botaoCancelar = document.createElement("button");
+            botaoCancelar.type = "button";
+            botaoCancelar.textContent = "Cancelar";
+            botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
+
+            const botaoConcluir = document.createElement("button");
+            botaoConcluir.type = "button";
+            botaoConcluir.textContent = ("Concluir");
+            botaoConcluir.addEventListener("click", () => concluirReserva(reserva));
+
+            cartao.append(linha, botaoCancelar, botaoConcluir);
         }
-        listaAgendamentos.append(cartao);
+            listaAgendamentos.append(cartao);
     });
 }
 
@@ -85,16 +78,19 @@ async function cancelarReserva(reserva) {
     });
 }
 
-function concluirReserva(reserva) {
-    const posicao = reservas.indexof(reserva);
+async function concluirReserva(reserva) {
+    await alterarReservas(() => {
+        const posicao = reservas.findIndex(atual => atual.id === reserva.id);
+        
+        if(posicao === -1) {
+            alert('Agendamento já concluido.')
+            return;
+        }
 
-    if(posicao === -1) {
-        return;
-    }
+        reservas[posicao].concluida = true;
+        salvarReservas();
+    });
 
-    reserva[posicao].concluida = true;
-    salvarReservas();
-    mostrarAgendamentos();
 }
 
 function OcultarTelaPrincipal() {
@@ -123,7 +119,9 @@ function carregarReservas(interromperEmErro = false) {
             return {
                 id: reserva.id,
                 servico: reserva.servico || 'Reserva anterior',
-                dia: reserva.dia,horario,duracao,
+                dia: reserva.dia,
+                horario,
+                duracao,
                 nome: reserva.nome || '',
                 telefone: reserva.telefone || '',
                 concluida: reserva.concluida === true
@@ -255,8 +253,7 @@ function validarFormulario() {
                 horario: horarioSelecionado.innerText,
                 duracao,
                 nome,
-                telefone,
-                concluida: false
+                telefone
             };
 
             await alterarReservas(() => {
