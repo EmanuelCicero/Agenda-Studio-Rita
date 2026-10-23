@@ -60,3 +60,19 @@ test("verifica conflito com qualquer agendamento", () => {
 
     assert.equal(testeConflitos(novo, marcados), true);
 });
+
+test("permite o mesmo horário em dias diferentes", () => {
+    assert.equal(testeConflitos(
+        { dia: '22/10/2026', inicio: 600, duracao: 60 },
+        [{ dia: '23/10/2026', inicio: 600, duracao: 60 }]
+    ), false);
+});
+
+test("detecta atendimento contido em outro sem alterar as entradas", () => {
+    const novo = Object.freeze({ dia: '22/10/2026', inicio: 630, duracao: 30 });
+    const marcados = Object.freeze([
+        Object.freeze({ dia: '22/10/2026', inicio: 600, duracao: 90 })
+    ]);
+    assert.equal(testeConflitos(novo, marcados), true);
+    assert.equal(testeConflitos(novo, marcados), true);
+});
