@@ -1,6 +1,8 @@
 const CHAVE_RESERVAS = 'agendaStudioRita.reservas';
 const reservas = carregarReservas();
 const HORARIO_FECHAMENTO = 18 * 60;
+const INICIO_ALMOCO = 12 * 60;
+const FIM_ALMOCO = 13 * 60 + 30;
 const listaAgendamentos = document.querySelector("#lista-agendamentos");
 const agendar = document.querySelector("#agendar");
 const painel = document.querySelector("#painel");
@@ -124,6 +126,17 @@ function formatarMinutosComoHorario(minutos) {
     return `${horas}:${restoMinutos}`;
 }
 
+function diaPermiteAtendimento(dia) {
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dia)) {
+        return false;
+    }
+
+    const [numeroDia, mes, ano] = dia.split('/').map(Number);
+    const data = new Date(ano, mes - 1, numeroDia);
+    return data.getFullYear() === ano && data.getMonth() === mes - 1 &&
+        data.getDate() === numeroDia && data.getDay() !== 0;
+}
+
 function validarFormulario() {
     const formularios = document.querySelectorAll('.form');
 
@@ -132,6 +145,13 @@ function validarFormulario() {
 
         formulario.addEventListener('submit', function(event) {
             event.preventDefault();
+            atualizarHorariosIndisponiveis();
+
+            const dia = formulario.querySelector('[name="dia"]').value;
+            if (!diaPermiteAtendimento(dia)) {
+                alert('Por favor, selecione um dia de atendimento de segunda a sábado.');
+                return;
+            }
 
             const nome = formulario.querySelector('[name="nome"]').value.trim();
             const telefone = formulario.querySelector('[name="telefone"]').value.trim();
@@ -162,9 +182,6 @@ function validarFormulario() {
                 alert('Por favor, selecione um horário.');
                 return;
             }
-
-            const dia = formulario.querySelector('[name="dia"]').value;
-            const inicio = converterHorarioParaMinutos(horarioSelecionado.innerText);
 
             const agendamento = {
                 servico: formulario.querySelector('[name="servico"]').value,
@@ -201,10 +218,6 @@ function exibirHorariosDisponiveis() {
 
                 let horaFormatada = i.toString().padStart(2, '0') + ':' + m;
 
-                if(horaFormatada === '12:00' || horaFormatada === "12:30" || horaFormatada === '13:00'){
-                    continue;
-                }
-
                 const botao = document.createElement('button');
                 botao.type = 'button';
                 botao.className = 'hora btn-horario';
@@ -229,13 +242,14 @@ function atualizarHorariosIndisponiveis() {
             const inicio = converterHorarioParaMinutos(botao.innerText);
             const fim = inicio + duracao;
             const passaDoFechamento = fim > HORARIO_FECHAMENTO;
+            const invadeAlmoco = inicio < FIM_ALMOCO && fim > INICIO_ALMOCO;
             const horarioReservado = reservas.some(reserva => {
                 const inicioReserva = converterHorarioParaMinutos(reserva.horario);
                 const fimReserva = inicioReserva + Number(reserva.duracao);
                 return reserva.dia === dia && inicio < fimReserva && fim > inicioReserva;
             });
 
-            botao.hidden = passaDoFechamento || horarioReservado;
+            botao.hidden = !diaPermiteAtendimento(dia) || invadeAlmoco || passaDoFechamento || horarioReservado;
             if (botao.hidden) {
                 botao.classList.remove('checked');
             }
@@ -308,6 +322,6 @@ botaoVoltar.addEventListener("click", () => {
 //Chamada de funções
 diaSem.addEventListener("change", mostrarAgendamentos);
 OcultarTelaPrincipal();
+dataAtualDeAgendamento();
 exibirHorariosDisponiveis();
 validarFormulario();
-dataAtualDeAgendamento();
