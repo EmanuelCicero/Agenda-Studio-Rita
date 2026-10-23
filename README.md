@@ -12,6 +12,10 @@ Eliminar a necessidade de agendamentos manuais por mensagem, otimizando o tempo 
 - **Visualização de disponibilidade:** Exibição apenas dos horários livres, respeitando o horário de funcionamento (Segunda a Sábado, 09h às 18h, com pausa para almoço).
 - **Seleção de Serviços:** Cálculo automático do tempo de bloqueio na agenda baseado no serviço escolhido.
 
+### 🛠️ Visão do Profissional (Admin)
+- **Painel Diário:** Visualização da agenda completa do dia.
+- **Gerenciamento:** Opção de cancelar agendamentos existentes.
+
 ## 📋 Catálogo de Serviços
 
 | Serviço | Duração | Valor |
@@ -33,3 +37,9 @@ Como o projeto é construído em JavaScript padrão (Vanilla) e não necessita d
 1. Clone este repositório em sua máquina:
    ```bash
    git clone https://github.com/EmanuelCicero/Agenda-Studio-Rita.git
+
+## 🧪 Como rodar os testes
+
+1. Para executar os testes, abra o terminal na raiz do projeto e rode o comando:
+   ```bash
+   node ./src/regras/agenda.test.js
