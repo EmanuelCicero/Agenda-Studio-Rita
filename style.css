@@ -18,8 +18,17 @@ body {
     background-color: #FFB396;
     height: 50px;
     display: flex;
-    justify-content: center;
     align-items: center;
+}
+.topo {
+    justify-content: space-between;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+.Entrar {
+    padding: 10px 16px;
+    cursor: pointer;
 }
 
 .logo {
@@ -149,6 +158,83 @@ main {
     cursor: pointer;
 }
 
+/* Estilização painel adm*/
+.botao-entrar {
+    background-color: #f1ece9;
+    color: #573934;
+    border: 0.5px solid #573934;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font: inherit;
+    cursor: pointer;
+}
+.botao-entrar:hover {
+    background-color: #f1ece9;
+}
+
+#painel {
+    max-width: 850px;
+    min-height: 300px;
+    margin: 40px auto;
+    padding: 32px;
+    background-color: #fffaf7;
+    color: #382f2b;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px #382f2b20;
+}
+
+#painel h1 {
+    margin-top: 0;
+    font-size: 36px;
+}
+
+#painel input[type="date"] {
+    padding: 10px;
+    border: 1px solid #c9aaa0;
+    border-radius: 8px;
+    font: inherit;
+}
+
+#lista-agendamentos .agendamento p {
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+
+.agendamento {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 16px 24px;
+    background-color: #fff1eb;
+    border-radius: 16px;
+}
+
+.agendamento p {
+    margin: 0;
+}
+
+.agendamento button {
+    flex-shrink: 0;
+}
+
+
+#painel button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    background-color: #754b3d;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+}
+
+#lista-agendamentos button {
+    background-color: #a84f45;
+}
+
 /* celular */
 @media (max-width: 700px) {
     main {
@@ -184,5 +270,14 @@ main {
 
     .input {
         width: 100%;
+    }
+
+    #painel {
+        margin: 20px 12px;
+        padding: 22px;
+    }
+
+    #painel h1 {
+        font-size: 28px;
     }
 }

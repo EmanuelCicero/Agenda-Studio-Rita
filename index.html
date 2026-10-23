@@ -14,10 +14,12 @@
 
     <header class="topo">
         <h2 class="logo">Rô Belo</h2>
+        <a class="botao-entrar"  href="#painel">Entrar</a>
     </header>
 
     <main>
-        <div class="fundo">
+        <!--Coloquei id "agendar" para poder ocultar no js-->
+        <div class="fundo" id="agendar">
             <h1 class="titulo">Agende seu horário</h1>
 
             <div class="caixa">
@@ -124,6 +126,15 @@
 
             </div>
         </div>
+        
+        <!--Adição painel adm-->
+        <section id="painel">
+                <h1>Painel da Rita</h1>
+                <label for="dia-sem"> Escolha o dia</label>
+                <input id="dia-sem" type="date">
+                <div id="lista-agendamentos"></div>
+                <button id="botao-voltar" type="button"> Voltar</button>
+        </section>
     </main>
 
     <footer class="rodape">

@@ -1,6 +1,76 @@
 const CHAVE_RESERVAS = 'agendaStudioRita.reservas';
 const reservas = carregarReservas();
 const HORARIO_FECHAMENTO = 18 * 60;
+const listaAgendamentos = document.querySelector("#lista-agendamentos");
+const agendar = document.querySelector("#agendar");
+const painel = document.querySelector("#painel");
+const botaoVoltar = document.querySelector("#botao-voltar");
+const diaSem = document.querySelector("#dia-sem");
+
+// funçôes do painel administrador
+function mostrarAgendamentos() {
+     listaAgendamentos.innerHTML = "";
+
+    if (diaSem.value === "") {
+        return;
+    }
+
+    const partes = diaSem.value.split("-");
+    const diaEscolhido = partes[2] + "/" + partes[1] + "/" + partes[0];
+
+    const reservasDoDia = reservas
+        .filter(reserva => reserva.dia === diaEscolhido)
+        .sort((a, b) => a.horario.localeCompare(b.horario));
+
+    if (reservasDoDia.length === 0) {
+        listaAgendamentos.textContent = "Nenhum agendamento nesse dia.";
+        return;
+    }
+
+    reservasDoDia.forEach(reserva => {
+        const linha = document.createElement("p");
+        linha.textContent =
+            reserva.horario + " — " +
+            reserva.nome + " — " +
+            reserva.telefone + " — " +
+            reserva.servico;
+
+        const cartao = document.createElement("div");
+        cartao.className = "agendamento";
+
+        const botaoCancelar = document.createElement("button");
+        botaoCancelar.type = "button";
+        botaoCancelar.textContent = "Cancelar";
+        botaoCancelar.addEventListener("click", () => cancelarReserva(reserva));
+
+        cartao.append(linha, botaoCancelar);
+        listaAgendamentos.append(cartao);
+    });
+}
+
+function cancelarReserva(reserva) {
+    const posicao = reservas.indexOf(reserva);
+
+    if (posicao === -1) {
+        return;
+    }
+
+    reservas.splice(posicao, 1);
+    salvarReservas();
+    atualizarHorariosIndisponiveis();
+    mostrarAgendamentos();
+}
+
+function OcultarTelaPrincipal() {
+    const painelAbrindo = window.location.hash === "#painel";
+
+    agendar.hidden = painelAbrindo;
+    painel.hidden = !painelAbrindo;
+
+    if (painelAbrindo) {
+        mostrarAgendamentos();
+    }
+}
 
 function carregarReservas() {
     try {
@@ -228,8 +298,16 @@ function dataAtualDeAgendamento() {
         }
     });
 }
+window.addEventListener("hashchange", OcultarTelaPrincipal);
+
+botaoVoltar.addEventListener("click", () => {
+    window.location.hash = "#agendar";
+});
+
 
 //Chamada de funções
+diaSem.addEventListener("change", mostrarAgendamentos);
+OcultarTelaPrincipal();
 exibirHorariosDisponiveis();
 validarFormulario();
 dataAtualDeAgendamento();
