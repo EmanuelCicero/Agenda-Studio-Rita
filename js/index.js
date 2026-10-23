@@ -1,6 +1,10 @@
+import { testeConflitos } from '../src/regras/agenda.js';
+
 const CHAVE_RESERVAS = 'agendaStudioRita.reservas';
 const reservas = carregarReservas();
 const HORARIO_FECHAMENTO = 18 * 60;
+const INICIO_ALMOCO = 12 * 60;
+const FIM_ALMOCO = 13 * 60 + 30;
 const listaAgendamentos = document.querySelector("#lista-agendamentos");
 const agendar = document.querySelector("#agendar");
 const painel = document.querySelector("#painel");
@@ -65,17 +69,20 @@ function mostrarAgendamentos() {
     });
 }
 
-function cancelarReserva(reserva) {
-    const posicao = reservas.indexOf(reserva);
-
-    if (posicao === -1) {
+async function cancelarReserva(reserva) {
+    if (!reserva.id) {
+        alert('Não foi possível identificar o agendamento. Recarregue a página e tente novamente.');
         return;
     }
-
-    reservas.splice(posicao, 1);
-    salvarReservas();
-    atualizarHorariosIndisponiveis();
-    mostrarAgendamentos();
+    await alterarReservas(() => {
+        const posicao = reservas.findIndex(atual => atual.id === reserva.id);
+        if (posicao === -1) {
+            alert('Este agendamento já foi removido. A agenda foi atualizada.');
+            return;
+        }
+        reservas.splice(posicao, 1);
+        salvarReservas();
+    });
 }
 
 function concluirReserva(reserva) {
@@ -101,11 +108,11 @@ function OcultarTelaPrincipal() {
     }
 }
 
-function carregarReservas() {
+function carregarReservas(interromperEmErro = false) {
     try {
         const reservasSalvas = JSON.parse(localStorage.getItem(CHAVE_RESERVAS) || '[]');
         if (!Array.isArray(reservasSalvas)) {
-            return [];
+            throw new Error('Os agendamentos salvos têm formato inválido.');
         }
 
         const reservasNormalizadas = reservasSalvas.map(reserva => {
@@ -114,6 +121,7 @@ function carregarReservas() {
             const horario = reserva.horario || formatarMinutosComoHorario(inicioAntigo);
 
             return {
+                id: reserva.id,
                 servico: reserva.servico || 'Reserva anterior',
                 dia: reserva.dia,horario,duracao,
                 nome: reserva.nome || '',
@@ -122,23 +130,55 @@ function carregarReservas() {
             };
         });
 
-        if (reservasSalvas.some(reserva => 'inicio' in reserva || 'fim' in reserva)) {
-            localStorage.setItem(CHAVE_RESERVAS, JSON.stringify(reservasNormalizadas));
-        }
-
         return reservasNormalizadas;
     } catch (erro) {
         console.error('Não foi possível carregar os horários salvos.', erro);
+        if (interromperEmErro) throw erro;
         return [];
     }
 }
 
 function salvarReservas() {
-    try {
-        localStorage.setItem(CHAVE_RESERVAS, JSON.stringify(reservas));
-    } catch (erro) {
-        console.error('Não foi possível salvar os horários no navegador.', erro);
+    localStorage.setItem(CHAVE_RESERVAS, JSON.stringify(reservas));
+}
+
+// O mesmo bloqueio coordena agendamentos e cancelamentos entre abas da mesma origem.
+async function alterarReservas(acao) {
+    if (!navigator.locks) {
+        alert('Para alterar a agenda com segurança, abra o sistema em HTTPS ou localhost em um navegador atualizado.');
+        return;
     }
+
+    try {
+        await navigator.locks.request(CHAVE_RESERVAS, () => {
+            reservas.splice(0, reservas.length, ...carregarReservas(true));
+            const anteriores = reservas.slice();
+            try {
+                acao();
+            } catch (erro) {
+                reservas.splice(0, reservas.length, ...anteriores);
+                throw erro;
+            } finally {
+                atualizarHorariosIndisponiveis();
+                if (window.location.hash === '#painel') mostrarAgendamentos();
+            }
+        });
+    } catch (erro) {
+        console.error('Não foi possível atualizar a agenda.', erro);
+        alert('Não foi possível salvar a alteração. Tente novamente.');
+    }
+}
+
+function temConflito(agendamento) {
+    return testeConflitos({
+        dia: agendamento.dia,
+        inicio: converterHorarioParaMinutos(agendamento.horario),
+        duracao: Number(agendamento.duracao)
+    }, reservas.map(reserva => ({
+        dia: reserva.dia,
+        inicio: converterHorarioParaMinutos(reserva.horario),
+        duracao: Number(reserva.duracao)
+    })));
 }
 
 function converterHorarioParaMinutos(horario) {
@@ -152,14 +192,32 @@ function formatarMinutosComoHorario(minutos) {
     return `${horas}:${restoMinutos}`;
 }
 
+function diaPermiteAtendimento(dia) {
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dia)) {
+        return false;
+    }
+
+    const [numeroDia, mes, ano] = dia.split('/').map(Number);
+    const data = new Date(ano, mes - 1, numeroDia);
+    return data.getFullYear() === ano && data.getMonth() === mes - 1 &&
+        data.getDate() === numeroDia && data.getDay() !== 0;
+}
+
 function validarFormulario() {
     const formularios = document.querySelectorAll('.form');
 
     formularios.forEach(formulario => {
         formulario.querySelector('[name="dia"]').addEventListener('change', atualizarHorariosIndisponiveis);
 
-        formulario.addEventListener('submit', function(event) {
+        formulario.addEventListener('submit', async function(event) {
             event.preventDefault();
+            atualizarHorariosIndisponiveis();
+
+            const dia = formulario.querySelector('[name="dia"]').value;
+            if (!diaPermiteAtendimento(dia)) {
+                alert('Por favor, selecione um dia de atendimento de segunda a sábado.');
+                return;
+            }
 
             const nome = formulario.querySelector('[name="nome"]').value.trim();
             const telefone = formulario.querySelector('[name="telefone"]').value.trim();
@@ -191,9 +249,6 @@ function validarFormulario() {
                 return;
             }
 
-            const dia = formulario.querySelector('[name="dia"]').value;
-            const inicio = converterHorarioParaMinutos(horarioSelecionado.innerText);
-
             const agendamento = {
                 servico: formulario.querySelector('[name="servico"]').value,
                 dia,
@@ -204,11 +259,16 @@ function validarFormulario() {
                 concluida: false
             };
 
-            reservas.push(agendamento);
-            salvarReservas();
-
-            horarioSelecionado.classList.remove('checked');
-            atualizarHorariosIndisponiveis();
+            await alterarReservas(() => {
+                if (temConflito(agendamento)) {
+                    alert('Este horário acabou de ser reservado. Selecione outro horário.');
+                    return;
+                }
+                agendamento.id = crypto.randomUUID();
+                reservas.push(agendamento);
+                salvarReservas();
+                horarioSelecionado.classList.remove('checked');
+            });
         });
     });
 }
@@ -229,10 +289,6 @@ function exibirHorariosDisponiveis() {
                 }
 
                 let horaFormatada = i.toString().padStart(2, '0') + ':' + m;
-
-                if(horaFormatada === '12:00' || horaFormatada === "12:30" || horaFormatada === '13:00'){
-                    continue;
-                }
 
                 const botao = document.createElement('button');
                 botao.type = 'button';
@@ -258,13 +314,10 @@ function atualizarHorariosIndisponiveis() {
             const inicio = converterHorarioParaMinutos(botao.innerText);
             const fim = inicio + duracao;
             const passaDoFechamento = fim > HORARIO_FECHAMENTO;
-            const horarioReservado = reservas.some(reserva => {
-                const inicioReserva = converterHorarioParaMinutos(reserva.horario);
-                const fimReserva = inicioReserva + Number(reserva.duracao);
-                return reserva.dia === dia && inicio < fimReserva && fim > inicioReserva;
-            });
+            const invadeAlmoco = inicio < FIM_ALMOCO && fim > INICIO_ALMOCO;
+            const horarioReservado = temConflito({ dia, horario: botao.innerText, duracao });
 
-            botao.hidden = passaDoFechamento || horarioReservado;
+            botao.hidden = !diaPermiteAtendimento(dia) || invadeAlmoco || passaDoFechamento || horarioReservado;
             if (botao.hidden) {
                 botao.classList.remove('checked');
             }
@@ -334,9 +387,24 @@ botaoVoltar.addEventListener("click", () => {
 });
 
 
-//Chamada de funções
-diaSem.addEventListener("change", mostrarAgendamentos);
-OcultarTelaPrincipal();
-exibirHorariosDisponiveis();
-validarFormulario();
-dataAtualDeAgendamento();
+async function inicializarAgenda() {
+    if (reservas.some(reserva => !reserva.id)) {
+        // Releitura e migração ficam no mesmo bloqueio usado nas demais gravações.
+        await alterarReservas(() => {
+            const migradas = reservas.map(reserva => ({
+                ...reserva,
+                id: reserva.id || crypto.randomUUID()
+            }));
+            reservas.splice(0, reservas.length, ...migradas);
+            salvarReservas();
+        });
+    }
+
+    diaSem.addEventListener("change", mostrarAgendamentos);
+    OcultarTelaPrincipal();
+    dataAtualDeAgendamento();
+    exibirHorariosDisponiveis();
+    validarFormulario();
+}
+
+const inicializacao = inicializarAgenda();
